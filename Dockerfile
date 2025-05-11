@@ -13,6 +13,8 @@ EXPOSE 8000 8001
 COPY ./requirements.txt /tmp/requirements.txt
 COPY ./requirements_dev.txt /tmp/requirements_dev.txt
 
+COPY . .
+
 ARG DEV=false
 
 RUN pip install --upgrade pip && \
