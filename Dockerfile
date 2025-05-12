@@ -1,4 +1,4 @@
-FROM --platform=linux/arm64 python:3.12
+FROM --platform=linux/amd64 python:3.12
 
 ENV PYTHONUNBUFFERED 1
 
@@ -12,7 +12,7 @@ EXPOSE 8000 8001
 
 COPY ./requirements.txt /tmp/requirements.txt
 COPY ./requirements_dev.txt /tmp/requirements_dev.txt
-COPY ./django_intmd/scripts/deployments /etc/scripts/deployments
+COPY scripts/deployments /etc/scripts/deployments
 RUN chmod +x /etc/scripts/deployments/*.sh  # 実行権限を追加
 COPY . .
 
