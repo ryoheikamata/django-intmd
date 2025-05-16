@@ -1,3 +1,4 @@
 Django==5.1
 gunicorn==23.0.0
 django-environ==0.11.0
+mysqlclient==2.2.4
