@@ -18,10 +18,10 @@ from typing import Optional
 import environ
 import structlog
 
-from django_intmd.logger_config import LoggerConfig
+from django_intmd.settings.logger_config import LoggerConfig
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 PROJECT_DIR = BASE_DIR.parent
 
 LoggerConfig()
