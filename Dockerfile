@@ -28,5 +28,5 @@ RUN pip install --upgrade pip && \
 		--disabled-password \
 		--no-create-home \
 		app-user
-
+RUN pip install django-structlog==8.1.0
 USER app-user

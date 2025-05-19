@@ -16,10 +16,16 @@ from pathlib import Path
 from typing import Optional
 
 import environ
+import structlog
+
+from django_intmd.logger_config import LoggerConfig
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent
 PROJECT_DIR = BASE_DIR.parent
+
+LoggerConfig()
+logger = structlog.get_logger(__name__)
 
 # Load environment variables
 env = environ.Env(
@@ -59,7 +65,6 @@ ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])
 
 
 # Application definition
-
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -78,6 +83,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'django_structlog.middlewares.RequestMiddleware'
 ]
 
 ROOT_URLCONF = "django_intmd.urls"
@@ -134,7 +140,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
@@ -156,3 +161,31 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# django-structlog configuration
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "structlog": {
+            "()": structlog.stdlib.ProcessorFormatter,
+            "processor": structlog.processors.JSONRenderer(),
+        }
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "structlog",
+        },
+    },
+    "loggers": {
+        "django_structlog": {
+            "handlers": ["console"],
+            "level": "INFO",
+        },
+        "appserver": {
+            "handlers": ["console"],
+            "level": "INFO",
+        },
+    },
+}
