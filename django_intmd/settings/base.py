@@ -106,7 +106,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "django_intmd.wsgi.application"
 
-
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
@@ -194,3 +193,6 @@ LOGGING = {
         },
     },
 }
+
+# Auth
+AUTH_USER_MODEL = "matching_app.User"
