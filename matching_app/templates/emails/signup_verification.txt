@@ -1,0 +1,7 @@
+Dear {{ user.username }}
+
+Your verification code is {{ user_verification.verification_code }}.
+
+This code will expire in 60 minutes.
+
+Thank you!
