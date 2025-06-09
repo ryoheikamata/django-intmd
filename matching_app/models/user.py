@@ -76,4 +76,5 @@ def create_OneToOnes(instance, created, **kwargs):
 
         age = get_age_from_date_of_birth(instance.date_of_birth)
         UserProfile.objects.create(user=instance, age=age)
-        UserVerification.objects.create(user=instance)
+        user_verification = UserVerification.objects.create(user=instance) # 変数に格納
+        user_verification.send_new_verification_code() # 追加
