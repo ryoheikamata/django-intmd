@@ -1,7 +1,7 @@
 import structlog
 from django.contrib import messages
 from django.contrib.auth import login
-from django.db import IntegrityError, transaction
+from django.db import transaction
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_http_methods
@@ -42,7 +42,7 @@ def signup(request: HttpRequest) -> HttpResponse:
                 email=email,
                 password=password,
                 date_of_birth=date_of_birth,
-                is_active=True,
+                is_active=False,
             )
 
         if user is None:
@@ -51,7 +51,7 @@ def signup(request: HttpRequest) -> HttpResponse:
             return render(request, "signup_error.html")
 
         login(request, user)
-        return redirect("user_home")
+        return redirect("verify_email", id=user.id)
 
     else:
         form = SignupForm()

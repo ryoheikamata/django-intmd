@@ -1,6 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
-from matching_app.models import Room, Message
+
+from matching_app.models import Message, Room
+
 
 class UserModelsTestCase(TestCase):
     def test_create_user_success(self):
@@ -33,6 +35,7 @@ class UserModelsTestCase(TestCase):
 
         superuser.delete()
 
+
 class BaseModelsTestCase(TestCase):
     def setUp(self):
         self.user = get_user_model().objects.create_user(
@@ -48,6 +51,7 @@ class BaseModelsTestCase(TestCase):
             date_of_birth="2000-01-01",
         )
 
+
 class RoomModelsTestCase(BaseModelsTestCase):
     def test_create_room_success(self):
         room = Room.objects.get_or_create_room_with_members([self.user, self.user2])
@@ -56,6 +60,7 @@ class RoomModelsTestCase(BaseModelsTestCase):
         self.assertEqual(room.members.count(), 2)
         self.assertEqual(room.members.filter(id=self.user.id).count(), 1)
         self.assertEqual(room.members.filter(id=self.user2.id).count(), 1)
+
 
 class MessageModelsTestCase(BaseModelsTestCase):
     def test_create_message_success(self):

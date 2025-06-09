@@ -72,7 +72,7 @@ services:
       - DB_PASS=password
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-    command: ["/etc/scripts/deployments/run_gunicorn.sh"]
+    command: sh /etc/scripts/deployments/run_gunicorn.sh
     depends_on:
       mysql:
         condition: service_healthy

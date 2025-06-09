@@ -35,8 +35,10 @@ class RoomManager(models.Manager):
                 RoomMember.objects.create(room=room, user=user)
         return room
 
+
 class Room(BaseModel):
     objects = RoomManager()
+
     class Meta:
         ordering = ["-updated_at"]
 
@@ -45,7 +47,7 @@ class Room(BaseModel):
         if not opposite_member:
             logger.error("no opposite member", room=self)
             raise NoOppositeUserError("no opposite member")
-        return opposite_member.use
+        return opposite_member.user
 
     def __str__(self):
         return f"Room {self.id} with members {self.members.all()}"
