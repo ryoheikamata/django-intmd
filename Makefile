@@ -6,7 +6,7 @@ SRC = .
 TEST_PASS ?= matching_app.tests
 
 # Phony targets
-.PHONY: build up down restart reset reset-all migrations migrate test target-test createsuperuser django-shell run-mysql-cli prettier help
+.PHONY: build up down restart reset reset-all migrations migrate test create-superuser django-shell run-mysql-cli prettier help
 
 # Commands
 build: ## Build the Docker images

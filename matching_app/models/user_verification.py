@@ -18,7 +18,6 @@ DEFAULT_VERIFICATION_EXPIRATION_MINUTES = 60
 
 
 class UserVerification(BaseModel):
-    # フィールドは既存のまま
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
     verification_code = models.CharField(max_length=VERIFICATION_CODE_LENGTH, null=True, blank=True)
     expired_at = models.DateTimeField(null=True, blank=True)
@@ -33,8 +32,6 @@ class UserVerification(BaseModel):
         self.expired_at = calculate_expiration_time(django.utils.timezone.now(), timedelta(minutes=expiration_minutes))
 
     def is_expired(self) -> bool:
-        if self.expired_at is None:
-            return True
         return django.utils.timezone.now() > self.expired_at
 
     def send_verification_code(self) -> None:

@@ -9,7 +9,7 @@
             <h1 class="auth-title">Login</h1>
             <p class="auth-subtitle">Welcome back! Please sign in to continue.</p>
         </div>
-
+        
         <form action="{% url 'login' %}" method="post" class="auth-form">
             {% csrf_token %}
             <div class="form-group">
@@ -36,7 +36,7 @@
             </div>
             <button type="submit" class="auth-submit">Login</button>
         </form>
-
+        
         <div class="auth-footer">
             <p>Don't have an account? <a href="{% url 'signup' %}">Sign Up</a></p>
         </div>

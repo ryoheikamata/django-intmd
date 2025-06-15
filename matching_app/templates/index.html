@@ -17,7 +17,7 @@
             <h2 class="auth-title">Login</h2>
             <p class="auth-subtitle">Welcome back! Please sign in to continue.</p>
         </div>
-
+        
         <form action="{% url 'index' %}" method="post" class="auth-form">
             {% csrf_token %}
             <div class="form-group">

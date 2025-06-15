@@ -1,9 +1,9 @@
 from datetime import date, datetime, timedelta
 from typing import Any
 
-
 MIN_BIRTH_YEAR = 1920
 MAX_BIRTH_YEAR = datetime.now().year - 18
+
 
 def str_to_date(date_of_birth: str) -> datetime.date:
     date_of_birth = datetime.strptime(date_of_birth, "%Y-%m-%d").date()
@@ -22,6 +22,7 @@ def get_age_from_date_of_birth(date_of_birth: Any) -> int:
         age -= 1
     return age
 
+
 def is_over_18_years_old(day_of_birth: datetime.date) -> bool:
     today = date.today()
     age = today.year - day_of_birth.year
@@ -39,6 +40,7 @@ def is_over_18_years_old(day_of_birth: datetime.date) -> bool:
         return True
     else:
         return False
+
 
 def calculate_expiration_time(from_time: datetime, timedelta: timedelta) -> datetime:
     return from_time + timedelta

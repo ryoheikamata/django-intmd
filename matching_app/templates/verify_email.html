@@ -13,6 +13,7 @@
         <form action="{% url 'verify_email' id %}" method="post">
             {% csrf_token %}
             {{ form.as_p }}
+            <br>
             <button type="submit" class="submit-button">Send</button>
         </form>
         <br>
