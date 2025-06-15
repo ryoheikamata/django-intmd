@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_menu.html" %}
 {% load static %}
 
 {% block title %}Home{% endblock %}
@@ -9,8 +9,8 @@
         <h1>User Home</h1>
 
         <div class="profile-section">
-            {% if user_profile.icon %}
-                <img src="{{ user_profile.icon.url }}" alt="User Icon">
+            {% if user.icon %}
+                <img src="{{ user.icon.url }}" alt="User Icon">
             {% else %}
                 <img src="{% static 'media/user_icons/default_user_icon.png' %}" alt="Default Icon">
             {% endif %}
@@ -49,6 +49,15 @@
                     <button type="submit" class="btn-alert">Logout</button>
                 </form>
             </div> -->
+            <div class="profile-actions">
+                <form method="get" action="{% url 'user_profile_update' %}">
+                    <button type="submit" class="submit-button">Edit Profile</button>
+                </form>
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-alert">Logout</button>
+                </form>
+            </div>
 
         </div>
     </div>
