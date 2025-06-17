@@ -1,0 +1,232 @@
+[
+    {
+        "model": "matching_app.user",
+        "pk": 1,
+        "fields": {
+            "username": "user1",
+            "email": "user1@example.com",
+            "password": "password1",
+            "date_of_birth": "1981-01-01"
+        }
+    },
+    {
+        "model": "matching_app.userprofile",
+        "pk": 1,
+        "fields": {
+            "user": 1,
+            "age": 44,
+            "address": "Yokohama",
+            "occupation": "Customer Support",
+            "biography": "I'm a legal.",
+            "created_at": "2025-01-01 00:00:00",
+            "updated_at": "2025-01-01 00:00:00"
+        }
+    },
+    {
+        "model": "matching_app.user",
+        "pk": 2,
+        "fields": {
+            "username": "user2",
+            "email": "user2@example.com",
+            "password": "password2",
+            "date_of_birth": "2007-01-01"
+        }
+    },
+    {
+        "model": "matching_app.userprofile",
+        "pk": 2,
+        "fields": {
+            "user": 2,
+            "age": 18,
+            "address": "Saitama",
+            "occupation": "Marketing",
+            "biography": "I'm a designer.",
+            "created_at": "2025-01-01 00:00:00",
+            "updated_at": "2025-01-01 00:00:00"
+        }
+    },
+    {
+        "model": "matching_app.user",
+        "pk": 3,
+        "fields": {
+            "username": "user3",
+            "email": "user3@example.com",
+            "password": "password3",
+            "date_of_birth": "1998-01-01"
+        }
+    },
+    {
+        "model": "matching_app.userprofile",
+        "pk": 3,
+        "fields": {
+            "user": 3,
+            "age": 27,
+            "address": "Tokyo",
+            "occupation": "HR",
+            "biography": "I'm a legal.",
+            "created_at": "2025-01-01 00:00:00",
+            "updated_at": "2025-01-01 00:00:00"
+        }
+    },
+    {
+        "model": "matching_app.user",
+        "pk": 4,
+        "fields": {
+            "username": "user4",
+            "email": "user4@example.com",
+            "password": "password4",
+            "date_of_birth": "1989-01-01"
+        }
+    },
+    {
+        "model": "matching_app.userprofile",
+        "pk": 4,
+        "fields": {
+            "user": 4,
+            "age": 36,
+            "address": "Saitama",
+            "occupation": "Customer Support",
+            "biography": "I'm a marketing.",
+            "created_at": "2025-01-01 00:00:00",
+            "updated_at": "2025-01-01 00:00:00"
+        }
+    },
+    {
+        "model": "matching_app.user",
+        "pk": 5,
+        "fields": {
+            "username": "user5",
+            "email": "user5@example.com",
+            "password": "password5",
+            "date_of_birth": "1980-01-01"
+        }
+    },
+    {
+        "model": "matching_app.userprofile",
+        "pk": 5,
+        "fields": {
+            "user": 5,
+            "age": 45,
+            "address": "Sendai",
+            "occupation": "HR",
+            "biography": "I'm a designer.",
+            "created_at": "2025-01-01 00:00:00",
+            "updated_at": "2025-01-01 00:00:00"
+        }
+    },
+    {
+        "model": "matching_app.user",
+        "pk": 6,
+        "fields": {
+            "username": "user6",
+            "email": "user6@example.com",
+            "password": "password6",
+            "date_of_birth": "1979-01-01"
+        }
+    },
+    {
+        "model": "matching_app.userprofile",
+        "pk": 6,
+        "fields": {
+            "user": 6,
+            "age": 46,
+            "address": "Nagoya",
+            "occupation": "Designer",
+            "biography": "I'm a legal.",
+            "created_at": "2025-01-01 00:00:00",
+            "updated_at": "2025-01-01 00:00:00"
+        }
+    },
+    {
+        "model": "matching_app.user",
+        "pk": 7,
+        "fields": {
+            "username": "user7",
+            "email": "user7@example.com",
+            "password": "password7",
+            "date_of_birth": "1985-01-01"
+        }
+    },
+    {
+        "model": "matching_app.userprofile",
+        "pk": 7,
+        "fields": {
+            "user": 7,
+            "age": 40,
+            "address": "Chiba",
+            "occupation": "Manager",
+            "biography": "I'm a manager.",
+            "created_at": "2025-01-01 00:00:00",
+            "updated_at": "2025-01-01 00:00:00"
+        }
+    },
+    {
+        "model": "matching_app.user",
+        "pk": 8,
+        "fields": {
+            "username": "user8",
+            "email": "user8@example.com",
+            "password": "password8",
+            "date_of_birth": "1977-01-01"
+        }
+    },
+    {
+        "model": "matching_app.userprofile",
+        "pk": 8,
+        "fields": {
+            "user": 8,
+            "age": 48,
+            "address": "Hiroshima",
+            "occupation": "Engineer",
+            "biography": "I'm an HR.",
+            "created_at": "2025-01-01 00:00:00",
+            "updated_at": "2025-01-01 00:00:00"
+        }
+    },
+    {
+        "model": "matching_app.user",
+        "pk": 9,
+        "fields": {
+            "username": "user9",
+            "email": "user9@example.com",
+            "password": "password9",
+            "date_of_birth": "1982-01-01"
+        }
+    },
+    {
+        "model": "matching_app.userprofile",
+        "pk": 9,
+        "fields": {
+            "user": 9,
+            "age": 43,
+            "address": "Hiroshima",
+            "occupation": "Designer",
+            "biography": "I'm an accountant.",
+            "created_at": "2025-01-01 00:00:00",
+            "updated_at": "2025-01-01 00:00:00"
+        }
+    },
+    {
+        "model": "matching_app.user",
+        "pk": 10,
+        "fields": {
+            "username": "user10",
+            "email": "user10@example.com",
+            "password": "password10",
+            "date_of_birth": "1987-01-01"
+        }
+    },
+    {
+        "model": "matching_app.userprofile",
+        "pk": 10,
+        "fields": {
+            "user": 10,
+            "age": 38,
+            "address": "Yokohama",
+            "occupation": "Sales",
+            "biography": "I'm a designer.",
+            "created_at": "2025-01-01 00:00:00",
+            "updated_at": "2025-01-01 00:00:00"
+        }
+    }
+]
