@@ -34,7 +34,7 @@ reset-all: ## Clear and rebuild all containers, database and run the development
 	make loaddata # 追加
 
 loaddata: ## Load Fixtures
-	docker compose exec django python manage.py loaddata user_fixtures.json
+	docker compose exec django python manage.py loaddata user_fixtures.json recruitment_fixtures.json
 
 migrations: ## Create the migrations for new models
 	docker compose exec django python manage.py makemigrations
