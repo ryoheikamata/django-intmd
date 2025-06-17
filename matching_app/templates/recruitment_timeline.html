@@ -5,8 +5,12 @@
 
 {% block content %}
 <div class="centered-container">
+    <div class="action-bar">
+        <form method="get" action="{% url 'recruitment_create' %}">
+            <button type="submit" class="submit-button">Create New</button>
+        </form>
+    </div>
     <h1>Recruitment Timeline</h1>
-
     <div class="timeline-list">
         {% for recruitment in page_obj %}
             <div class="timeline-item">
