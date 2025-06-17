@@ -1,6 +1,10 @@
+import tempfile
+
 from django.contrib.auth import get_user_model
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
+from PIL import Image
 
 from matching_app.models import User, UserVerification
 
@@ -151,3 +155,78 @@ class LoginViewTests(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, self.index_url)
+
+class UserProfileViewTests(TestCase):
+    def setUp(self):
+        self.user1 = get_user_model().objects.create_user(
+            username="user1",
+            email="user1@example.com",
+            password="User1Pass123",
+            date_of_birth="2000-01-01",
+        )
+        self.client.login(email=self.user1.email, password="User1Pass123")
+
+        self.user2 = get_user_model().objects.create_user(
+            username="user2",
+            email="user2@example.com",
+            password="User2Pass123",
+            date_of_birth="2000-01-01",
+        )
+        self.home_url = reverse("user_home")
+        self.user_profile_update_url = reverse("user_profile_update")
+        self.user_profile = self.user1.userprofile
+
+        with tempfile.NamedTemporaryFile(suffix=".jpg", delete=True) as temp_image:
+            image = Image.new("RGB", (100, 100), color="red")
+            image.save(temp_image, format="JPEG")
+            temp_image.seek(0)
+            self.image_file = SimpleUploadedFile(
+                name="test_image.jpg", content=temp_image.read(), content_type="image/jpeg"
+            )
+
+    def tearDown(self):
+        self.user1.icon.delete()
+
+    def test_get_user_profile_update(self):
+        response = self.client.get(self.user_profile_update_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "user_profile_update.html")
+        self.assertIn("user_form", response.context)
+        self.assertIn("user_profile_form", response.context)
+        self.assertIn("user_profile", response.context)
+
+    def test_update_user_profile_valid_data(self):
+        response = self.client.post(
+            self.user_profile_update_url,
+            {
+                "username": "updated_user",
+                "icon": self.image_file,
+                "address": "123 Test Street",
+                "occupation": "Test Occupation",
+                "biography": "Test Biography",
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, self.home_url)
+
+        self.user1.refresh_from_db()
+        user_profile = self.user1.userprofile
+        self.assertIn("user_icons/test_image.jpg", self.user1.icon.path)
+        self.assertEqual(user_profile.address, "123 Test Street")
+        self.assertEqual(user_profile.occupation, "Test Occupation")
+        self.assertEqual(user_profile.biography, "Test Biography")
+
+    def test_get_user_profile_list(self):
+        response = self.client.get(reverse("user_profile_list"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "user_profile_list.html")
+        self.assertIn("users", response.context)
+        self.assertEqual(len(response.context["users"]), 1)
+
+    def test_get_user_profile_detail(self):
+        response = self.client.get(reverse("user_profile_detail", kwargs={"pk": self.user2.id}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "user_profile_detail.html")
+        self.assertIn("user", response.context)
+        self.assertEqual(response.context["user"].id, self.user2.id)
