@@ -1,9 +1,9 @@
 import structlog
-imoprt random
+import random
 
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.views.decorators.http import require_http_methods
 from matching_app.forms.user_profile import UserForm, UserProfileForm
 from django.contrib.auth import get_user_model # 追加
@@ -59,3 +59,9 @@ def user_profile_list(request: HttpRequest) -> HttpResponse:
         "user_profile_list.html",
         {"users": users},
     )
+
+@login_required
+@require_http_methods(["GET"])
+def user_profile_detail(request: HttpRequest, pk: int) -> HttpResponse:
+    user = get_object_or_404(get_user_model().objects.select_related("userprofile"), pk=pk)
+    return render(request, "user_profile_detail.html", {"user": user})
