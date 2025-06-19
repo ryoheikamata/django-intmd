@@ -10,7 +10,6 @@
     </button>
 
     <div class="recruitment-detail">
-
         <div class="recruitment-meta">
             <a href="{% url 'user_profile_detail' pk=recruitment.user.id %}">
                 {% if recruitment.user.icon %}
@@ -26,6 +25,13 @@
         <h2>{{ recruitment.title }}</h2>
         <br>
         <p>{{ recruitment.content }}</p>
+    </div>
+    <div class="recruitment-actions">
+        {% if recruitment.user == user %}
+            <form method="get" action="{% url 'recruitment_update' recruitment.pk %}">
+                <button class="submit-button">Edit Recruitment</button>
+            </form>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
