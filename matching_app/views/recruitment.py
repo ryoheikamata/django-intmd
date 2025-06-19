@@ -8,6 +8,7 @@ from django.views.decorators.http import require_http_methods
 
 from matching_app.forms.recruitment import RecruitmentForm
 from matching_app.models import Recruitment
+from django.core.exceptions import PermissionDenied
 
 RECRUITMENT_TIMELINE_PAGE_SIZE = 10
 
@@ -52,4 +53,31 @@ def recruitment_create(request: HttpRequest) -> HttpResponse:
         request,
         "recruitment_create.html",
         {"form": form},
+    )
+
+@login_required
+@require_http_methods(["GET", "POST"])
+def recruitment_update(request: HttpRequest, pk: int) -> HttpResponse:
+    recruitment = get_object_or_404(Recruitment.objects.select_related("user"), pk=pk)
+    if recruitment.user != request.user:
+        logger.warning("User is not the owner of the recruitment", user=request.user, recruitment=recruitment)
+        raise PermissionDenied
+
+    if request.method == "POST":
+        form = RecruitmentForm(request.POST, instance=recruitment)
+        if form.is_valid():
+            form.save()
+            return redirect("recruitment_timeline")
+        else:
+            logger.error("Invalid update recruitment form", error=form.errors)
+    else:
+        form = RecruitmentForm(instance=recruitment)
+
+    return render(
+        request,
+        "recruitment_update.html",
+        {
+            "form": form,
+            "recruitment": recruitment,
+        },
     )
