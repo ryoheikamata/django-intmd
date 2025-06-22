@@ -47,6 +47,7 @@ ALLOWED_HOSTS = []
 
 # Application definition
 INSTALLED_APPS = [
+    "daphne",  # 追加
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -54,9 +55,11 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "matching_app",
+    "corsheaders",  # 追加
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",  # 追加
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -85,7 +88,16 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "django_intmd.wsgi.application"
+ASGI_APPLICATION = "django_intmd.asgi.application"  # Daphne
 
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [(env("REDIS_HOST"), env("REDIS_PORT"))],
+        },
+    }
+}
 
 # Database
 DATABASES = {
@@ -189,3 +201,19 @@ EMAIL_USE_TLS = env("EMAIL_USE_TLS")
 EMAIL_HOST_USER = env("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASS")
 EMAIL_DEFAULT_FROM = env("EMAIL_DEFAULT_FROM")
+
+# CORS
+if env("APP_ENV") == "development":
+    CORS_ALLOWED_ORIGINS = [
+        "http://localhost:8080",
+    ]
+else:
+    CORS_ALLOWED_ORIGINS = []
+
+# CSRF
+if env("APP_ENV") == "development":
+    CSRF_TRUSTED_ORIGINS = [
+        "http://localhost:8080",
+    ]
+else:
+    CSRF_TRUSTED_ORIGINS = []
