@@ -20,6 +20,8 @@ down: ## Clear the containers
 
 restart: ## Restart django container
 	docker compose restart django
+	docker compose restart channels
+	docker compose restart nginx
 
 reset: ## Clear containers and build the images and run the development server
 	docker compose down

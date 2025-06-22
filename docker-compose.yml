@@ -106,6 +106,19 @@ services:
     networks:
       - app-network
 
+  nginx: # 追加
+    build:
+      context: ./nginx
+    ports:
+      - "8080:8080"
+    depends_on:
+      django:
+        condition: service_started
+      channels:
+        condition: service_started
+    networks:
+      - app-network
+
 volumes:
   dev-data:
 
