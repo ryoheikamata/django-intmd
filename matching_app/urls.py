@@ -15,7 +15,7 @@ from matching_app.views.signup import signup
 from matching_app.views.user_profile import user_home, user_profile_update, user_profile_list, user_profile_detail
 from matching_app.views.verify import send_new_verification_code, verify_email
 from matching_app.views.user_like import user_like_toggle, user_like_list
-from matching_app.views.chat import chat_room, chat_room_create
+from matching_app.views.chat import chat_room, chat_room_create, chat_room_list
 
 urlpatterns = (
     [
@@ -45,6 +45,7 @@ urlpatterns = (
         # Chat
         path("chats/<int:room_id>/", chat_room, name="chat_room"),
         path("chats/create/<int:user_id>/", chat_room_create, name="chat_room_create"),
+        path("chats/list/", chat_room_list, name="chat_room_list"),
     ]
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
