@@ -81,6 +81,31 @@ services:
     networks:
       - app-network
 
+  channels: # 追加
+    build:
+      context: .
+      args:
+        - DEV=true
+    ports:
+      - "8001:8001"
+    volumes:
+      - .:/django_intmd
+    environment:
+      - DB_HOST=mysql
+      - DB_NAME=app
+      - DB_USER=app
+      - DB_PASS=password
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    command: sh /etc/scripts/deployments/run_daphne.sh
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - app-network
+
 volumes:
   dev-data:
 
