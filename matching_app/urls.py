@@ -14,7 +14,7 @@ from matching_app.views.recruitment import (
 from matching_app.views.signup import signup
 from matching_app.views.user_profile import user_home, user_profile_update, user_profile_list, user_profile_detail
 from matching_app.views.verify import send_new_verification_code, verify_email
-from matching_app.views.user_like import user_like_toggle
+from matching_app.views.user_like import user_like_toggle, user_like_list
 
 urlpatterns = (
     [
@@ -40,6 +40,7 @@ urlpatterns = (
         path("recruitments/search/", recruitment_search, name="recruitment_search"),
         # User like
         path("likes/<int:receiver_id>/", user_like_toggle, name="user_like_toggle"),
+        path("likes/list/", user_like_list, name="user_like_list"),  # 追加
     ]
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

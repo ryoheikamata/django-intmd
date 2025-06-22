@@ -6,7 +6,7 @@ from django.test import TestCase
 from django.urls import reverse
 from PIL import Image
 
-from matching_app.models import User, UserVerification, Recruitment
+from matching_app.models import User, UserVerification, Recruitment, UserLike
 
 
 class SignupViewTests(TestCase):
@@ -322,3 +322,91 @@ class RecruitmentViewTests(TestCase):
 
         self.assertEqual(response.status_code, 403)
         self.assertTrue(Recruitment.objects.filter(id=self.recruitment2.id).exists())
+
+class UserLikeViewTests(TestCase):
+    def setUp(self):
+        self.login_user = User.objects.create_user(
+            username="login_user",
+            email="login@example.com",
+            password="LoginPass123",
+            date_of_birth="2000-01-01",
+        )
+        self.user1 = User.objects.create_user(
+            username="like_user1",
+            email="like1@example.com",
+            password="Like1Pass123",
+            date_of_birth="2000-01-01",
+        )
+        self.user2 = User.objects.create_user(
+            username="like_user2",
+            email="like2@example.com",
+            password="Like2Pass123",
+            date_of_birth="1980-01-01",
+        )
+        self.user3 = User.objects.create_user(
+            username="like_user3",
+            email="like3@example.com",
+            password="Like3Pass123",
+            date_of_birth="1980-01-01",
+        )
+        self.user4 = User.objects.create_user(
+            username="like_user4",
+            email="like4@example.com",
+            password="Like4Pass123",
+            date_of_birth="1980-01-01",
+        )
+        self.user_like_to_user1 = UserLike.objects.create(
+            sender=self.login_user,
+            receiver=self.user1,
+        )
+        self.user_like_to_user3 = UserLike.objects.create(
+            sender=self.login_user,
+            receiver=self.user3,
+        )
+        self.user_like_from_user1 = UserLike.objects.create(
+            sender=self.user1,
+            receiver=self.login_user,
+        )
+        self.user_like_from_user4 = UserLike.objects.create(
+            sender=self.user4,
+            receiver=self.login_user,
+        )
+
+        self.client.login(email=self.login_user.email, password="LoginPass123")
+        self.user_like_list_url = reverse("user_like_list")
+
+    def test_user_like_toggle_create_success(self):
+        response = self.client.post(
+            reverse("user_like_toggle", args=[self.user2.id]),
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {"like_status": "liked"})
+        self.assertTrue(UserLike.objects.filter(sender=self.login_user, receiver=self.user2).exists())
+
+    def test_user_like_toggle_delete_success(self):
+        response = self.client.post(
+            reverse("user_like_toggle", args=[self.user1.id]),
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {"like_status": "unliked"})
+        self.assertFalse(UserLike.objects.filter(sender=self.login_user, receiver=self.user1).exists())
+
+    def test_get_user_like_list_success(self):
+        response = self.client.get(self.user_like_list_url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "user_like_list.html")
+
+        self.assertIn("matched_users", response.context)
+        self.assertIn("receivers", response.context)
+        self.assertIn("senders", response.context)
+
+        self.assertEqual(len(response.context["matched_users"]), 1)
+        self.assertEqual(len(response.context["receivers"]), 1)
+        self.assertEqual(len(response.context["senders"]), 1)
+
+        self.assertIn(self.user1, response.context["matched_users"])
+        self.assertIn(self.user4, response.context["senders"])
+        self.assertIn(self.user3, response.context["receivers"])
