@@ -37,6 +37,10 @@
                 <span class="profile-info-value">{{ user.userprofile.biography }}</span>
             </div>
             <div class="profile-actions">
+                <form action="{% url 'chat_room_create' user.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-primary">Message</button>
+                </form>
                 <button id="like-button"
                     class="btn-like {% if is_like_user %}liked{% endif %}"
                     data-user-id="{{ user.id }}"
