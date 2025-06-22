@@ -31,7 +31,35 @@
             <form method="get" action="{% url 'recruitment_update' recruitment.pk %}">
                 <button class="submit-button">Edit Recruitment</button>
             </form>
+            <button class="btn-alert" id="delete-button" data-url="{% url 'recruitment_delete' recruitment.pk %}">
+                Delete Recruitment
+            </button>
         {% endif %}
     </div>
 </div>
+    <!-- scriptを追加 -->
+<script>
+    document.getElementById('delete-button').addEventListener('click', function () {
+        const deleteUrl = this.getAttribute('data-url');
+        if (confirm("Are you sure to delete?")) {
+            fetch(deleteUrl, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = "{% url 'recruitment_timeline' %}";
+                } else {
+                    alert("Failed to delete the recruitment.");
+                }
+            })
+            .catch(error => {
+                alert("Failed to delete the recruitment.");
+                console.error('Error:', error);
+            });
+        }
+    });
+</script>
 {% endblock %}
