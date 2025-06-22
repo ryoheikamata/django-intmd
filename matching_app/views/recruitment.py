@@ -6,7 +6,7 @@ from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_http_methods
 
-from matching_app.forms.recruitment import RecruitmentForm
+from matching_app.forms.recruitment import RecruitmentForm, SearchRecruitmentForm
 from matching_app.models import Recruitment
 from django.core.exceptions import PermissionDenied
 
@@ -17,7 +17,14 @@ logger = structlog.get_logger(__name__)
 @login_required
 @require_http_methods(["GET"])
 def recruitment_timeline(request: HttpRequest) -> HttpResponse:
+    # 以下年齢で絞り込む処理を追加
+    min_age = request.session.get("search_min_age")
+    max_age = request.session.get("search_max_age")
     recruitments = Recruitment.objects.select_related("user").all()
+    if min_age:
+        recruitments = recruitments.filter(user__userprofile__age__gte=min_age)  # userprofile が正しい
+    if max_age:
+        recruitments = recruitments.filter(user__userprofile__age__lte=max_age)  # userprofile が正しい
     pagenator = Paginator(recruitments, RECRUITMENT_TIMELINE_PAGE_SIZE)
     page_number = request.GET.get("page", default=1)
     page_obj = pagenator.page(page_number)
@@ -27,6 +34,25 @@ def recruitment_timeline(request: HttpRequest) -> HttpResponse:
         "recruitment_timeline.html",
         {"page_obj": page_obj},
     )
+
+@login_required
+@require_http_methods(["GET", "POST"])
+def recruitment_search(request: HttpRequest) -> HttpResponse:
+    if request.method == "POST":
+        form = SearchRecruitmentForm(request.POST)
+        if form.is_valid():
+            request.session["search_min_age"] = form.cleaned_data["min_age"]
+            request.session["search_max_age"] = form.cleaned_data["max_age"]
+            return redirect("recruitment_timeline")
+        else:
+            logger.error("invalid search recruitment form", form_errors=form.errors)
+    else:
+        initial = {
+            "min_age": request.session.get("search_min_age"),
+            "max_age": request.session.get("search_max_age"),
+        }
+        form = SearchRecruitmentForm(initial=initial)
+    return render(request, "recruitment_search.html", {"form": form})
 
 @login_required
 @require_http_methods(["GET"])
