@@ -2,7 +2,7 @@ import structlog
 
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_http_methods
 
@@ -81,3 +81,14 @@ def recruitment_update(request: HttpRequest, pk: int) -> HttpResponse:
             "recruitment": recruitment,
         },
     )
+
+@login_required
+@require_http_methods(["DELETE"])
+def recruitment_delete(request: HttpRequest, pk: int) -> JsonResponse:
+    recruitment = get_object_or_404(Recruitment.objects.select_related("user"), pk=pk)
+    if recruitment.user != request.user:
+        logger.warning("User is not the owner of the recruitment", user=request.user, recruitment=recruitment)
+        raise PermissionDenied
+
+    recruitment.delete()
+    return JsonResponse({"message": "Recruitment deleted successfully"}, status=200)
