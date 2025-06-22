@@ -36,7 +36,58 @@
                 <span class="profile-info-label">Biography</span>
                 <span class="profile-info-value">{{ user.userprofile.biography }}</span>
             </div>
+            <div class="profile-actions">
+                <button id="like-button"
+                    class="btn-like {% if is_like_user %}liked{% endif %}"
+                    data-user-id="{{ user.id }}"
+                    data-update-url="{% url 'user_like_toggle' receiver_id=user.id %}">
+                    {% if is_like_user %}
+                    Unlike
+                    {% else %}
+                    Like
+                    {% endif %}
+                </button>
+            </div>
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const likeButton = document.getElementById('like-button');
+
+        likeButton.addEventListener('click', function() {
+            likeButton.disabled = true;
+
+            fetch(likeButton.getAttribute('data-update-url'), {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.like_status === 'liked') {
+                    likeButton.classList.add('liked');
+                    likeButton.textContent = 'Unlike';
+                } else if (data.like_status === 'unliked') {
+                    likeButton.classList.remove('liked');
+                    likeButton.textContent = 'Like';
+                }
+            })
+            .catch(error => {
+                alert(`Failed to update like status: ${error.message}`);
+                console.error('Error:', error);
+            })
+            .finally(() => {
+                likeButton.disabled = false;
+            });
+        });
+    });
+</script>
 {% endblock %}
