@@ -6,7 +6,7 @@ from django.test import TestCase
 from django.urls import reverse
 from PIL import Image
 
-from matching_app.models import User, UserVerification
+from matching_app.models import User, UserVerification, Recruitment
 
 
 class SignupViewTests(TestCase):
@@ -230,3 +230,95 @@ class UserProfileViewTests(TestCase):
         self.assertTemplateUsed(response, "user_profile_detail.html")
         self.assertIn("user", response.context)
         self.assertEqual(response.context["user"].id, self.user2.id)
+
+
+class RecruitmentViewTests(TestCase):
+    def setUp(self):
+        self.user1 = User.objects.create_user(
+            username="user1",
+            email="user1@example.com",
+            password="User1Pass123",
+            date_of_birth="2000-01-01",
+        )
+        self.user2 = User.objects.create_user(
+            username="user2",
+            email="user2@example.com",
+            password="User2Pass123",
+            date_of_birth="1980-01-01",
+        )
+        self.recruitment1 = Recruitment.objects.create(
+            user=self.user1,
+            title="Recruitment Title 1",
+            content="Recruitment Content 1",
+        )
+        self.recruitment2 = Recruitment.objects.create(
+            user=self.user2,
+            title="Recruitment Title 2",
+            content="Recruitment Content 2",
+        )
+
+        self.client.login(email=self.user1.email, password="User1Pass123")
+
+        self.recruitment_timeline_url = reverse("recruitment_timeline")
+        self.recruitment_create_url = reverse("recruitment_create")
+        self.recruitment_search_url = reverse("recruitment_search")
+
+    def test_create_recruitment_success(self):
+        response = self.client.post(
+            self.recruitment_create_url,
+            {
+                "title": "New Recruitment Title",
+                "content": "New Recruitment Content",
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, self.recruitment_timeline_url)
+
+        new_recruitment = Recruitment.objects.get(title="New Recruitment Title")
+        self.assertEqual(new_recruitment.user, self.user1)
+        self.assertEqual(new_recruitment.title, "New Recruitment Title")
+        self.assertEqual(new_recruitment.content, "New Recruitment Content")
+
+    def test_update_recruitment_success(self):
+        response = self.client.post(
+            reverse("recruitment_update", args=[self.recruitment1.id]),
+            {
+                "title": "Updated Title",
+                "content": "Updated Content",
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, self.recruitment_timeline_url)
+
+        updated_recruitment = Recruitment.objects.get(id=self.recruitment1.id)
+        self.assertEqual(updated_recruitment.title, "Updated Title")
+        self.assertEqual(updated_recruitment.content, "Updated Content")
+
+    def test_update_recruitment_invalid_access(self):
+        response = self.client.post(
+            reverse("recruitment_update", args=[self.recruitment2.id]),
+            {
+                "title": "Updated Title",
+                "content": "Updated Content",
+            },
+        )
+
+        self.assertEqual(response.status_code, 403)
+
+        updated_recruitment = Recruitment.objects.get(id=self.recruitment2.id)
+        self.assertNotEqual(updated_recruitment.title, "Updated Title")
+        self.assertNotEqual(updated_recruitment.content, "Updated Content")
+
+    def test_delete_recruitment_success(self):
+        response = self.client.delete(reverse("recruitment_delete", args=[self.recruitment1.id]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(Recruitment.objects.filter(id=self.recruitment1.id).exists())
+
+    def test_delete_recruitment_invalid_access(self):
+        response = self.client.delete(reverse("recruitment_delete", args=[self.recruitment2.id]))
+
+        self.assertEqual(response.status_code, 403)
+        self.assertTrue(Recruitment.objects.filter(id=self.recruitment2.id).exists())
